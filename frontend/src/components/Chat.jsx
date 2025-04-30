@@ -222,13 +222,13 @@ const Chat = ({ setIsLoggedIn }) => {
 
         const data = await res.json();
         console.log("Messages:", data);
-        const replymessage = data?.replyId?.message ?? null;
+        console.log(data.replyId, "<><><><><>");
 
         const transformedMessages = data.map((msg) => ({
           text: msg.message,
           sender: msg.sender._id,
           status: msg.status,
-          replyId: replymessage,
+          replyId: msg.replyId?.message ?? null,
           resProfileUrl: msg.sender.photo,
           timestamp: new Date(msg.createdAt).toLocaleTimeString(),
           _id: msg._id,
