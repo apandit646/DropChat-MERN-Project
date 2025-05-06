@@ -263,32 +263,22 @@ const Chat = ({ setIsLoggedIn }) => {
   const handleSendMessage = useCallback(async () => {
     if (!newMessage.trim() || !selectedFriend || !socket) return;
 
+    const messageToSend = newMessage.trim(); // Save before clearing
+    setNewMessage("");
+
     try {
-      // Optimistically add the message to the UI
-      // const tempId = Date.now().toString();
-      // const optimisticMessage = {
-      //   text: newMessage,
-      //   sender: userId,
-      //   status: "pending",
-      //   resProfileUrl: profileUrl,
-      //   timestamp: new Date().toLocaleTimeString(),
-      //   _id: tempId,
-      // };
-
-      // setMessages((prev) => [...prev, optimisticMessage]);
-      setNewMessage("");
-
-      console.log("ssssssssssssssss", refrenceMessageId);
-      // Emit the message to the server
       socket.emit("sendMessage", {
         receiver: selectedFriend._id,
         sender: userId,
-        message: newMessage,
+        message: messageToSend,
         replyId: refrenceMessageId,
       });
-      setRefrenceMessage(null);
 
-      // Refresh friends list to update unread counts
+      setRefrenceMessage(null);
+      setRefrenceMessageId(null);
+      setShowReferenceMessagePop(false);
+
+      // Optionally refresh friend list
       await getFriendsList();
     } catch (error) {
       console.error("Error sending message:", error);
@@ -576,9 +566,10 @@ const Chat = ({ setIsLoggedIn }) => {
     setRefrenceMessageId(message._id); // Assuming you meant to use message.id here
     setShowReferenceMessagePop(true);
   }, []);
-  const handeCloseReferenceMessagePop = useCallback(async () => {
-    await setRefrenceMessage(null);
-    await setRefrenceMessageId(null);
+  const handeCloseReferenceMessagePop = useCallback(() => {
+    setRefrenceMessage(null);
+    setRefrenceMessageId(null);
+
     setShowReferenceMessagePop(false);
   }, []);
 
