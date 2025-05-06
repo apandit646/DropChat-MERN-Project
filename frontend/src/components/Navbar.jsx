@@ -1,112 +1,98 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Menu, X, User, LogOut, Home, Phone, Info } from "lucide-react";
+import { Menu, X, MessageCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = ({ setIsLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Close dropdown when clicking outside
+
   const handleLogout = () => {
     // Add your logout logic here
+    localStorage.removeItem("token");
+    if (setIsLoggedIn) {
+      setIsLoggedIn(false);
+    }
     navigate("/login");
   };
 
-  const menuItems = [{ label: "login", icon: <Home size={20} />, path: "/" }];
-
   return (
-    <nav className="bg-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo and primary nav */}
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="text-2xl font-bold text-blue-600">
-                Logo
-              </Link>
-            </div>
-
-            {/* Desktop menu */}
-            <div className="hidden md:ml-6 md:flex md:space-x-8">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.path}
-                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600"
-                >
-                  {item.icon}
-                  <span className="ml-1">{item.label}</span>
-                </Link>
-              ))}
-            </div>
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 120, damping: 20 }}
+      className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white shadow-lg"
+    >
+      <div className="container mx-auto">
+        <div className="relative">
+          {/* Decorative curved shapes */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -left-20 -top-20 w-64 h-64 rounded-full bg-white opacity-5"></div>
+            <div className="absolute right-20 top-10 w-32 h-32 rounded-full bg-white opacity-5"></div>
+            <div className="absolute left-1/4 -bottom-10 w-48 h-48 rounded-full bg-white opacity-5"></div>
           </div>
 
-          {/* User menu */}
-          <div className="hidden md:flex items-center">
-            <div className="ml-4 flex items-center space-x-4">
-              <Link
-                to="/profile"
-                className="text-gray-700 hover:text-blue-600 p-2 rounded-full hover:bg-gray-100"
+          {/* Main Navigation Content */}
+          <div className="relative flex justify-between items-center p-4">
+            <Link to="/" className="flex items-center group">
+              <motion.div
+                whileHover={{ rotate: 15 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
-                <User size={20} />
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="text-gray-700 hover:text-blue-600 p-2 rounded-full hover:bg-gray-100"
-              >
-                <LogOut size={20} />
-              </button>
-            </div>
-          </div>
+                <MessageCircle
+                  size={32}
+                  className="mr-2 text-white group-hover:text-pink-300 transition-colors duration-300"
+                />
+              </motion.div>
+              <span className="hidden md:inline text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+                DropChat
+              </span>
+            </Link>
 
-          {/* Mobile menu button */}
-          <div className="flex items-center md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setIsOpen(!isOpen)}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-300"
+              >
+                {isOpen ? <X size={24} /> : <Menu size={24} />}
+              </motion.button>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex md:items-center md:space-x-1"></div>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="pt-2 pb-3 space-y-1">
-            {menuItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.path}
-                className="flex items-center px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.icon}
-                <span className="ml-2">{item.label}</span>
-              </Link>
-            ))}
-            <Link
-              to="/profile"
-              className="flex items-center px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100"
-              onClick={() => setIsOpen(false)}
-            >
-              <User size={20} />
-              <span className="ml-2">Profile</span>
-            </Link>
-            <button
-              onClick={() => {
-                handleLogout();
-                setIsOpen(false);
-              }}
-              className="flex items-center w-full px-4 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100"
-            >
-              <LogOut size={20} />
-              <span className="ml-2">Logout</span>
-            </button>
-          </div>
-        </div>
-      )}
-    </nav>
+      {/* Mobile Navigation Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden bg-purple-700/80 backdrop-blur-sm overflow-hidden"
+          >
+            <div className="p-3">
+              <div className="mt-4 border-t border-white/10 pt-2">
+                <div
+                  onClick={handleLogout}
+                  className="flex items-center py-3 px-2 rounded-lg hover:bg-white/10 transition-colors duration-300 cursor-pointer"
+                >
+                  <span className="w-8 text-center">🚪</span>
+                  <span className="ml-2">Logout</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
 };
 
