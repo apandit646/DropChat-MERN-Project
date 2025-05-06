@@ -27,15 +27,6 @@ const GroupChat = ({ setIsLoggedIn }) => {
   const [showPopup, setShowPopup] = useState(false); // users pops
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setIsLoggedIn(false);
-    } else {
-      setIsLoggedIn(true);
-    }
-  }, [setIsLoggedIn]);
-
   // Fetch Friends for Group Creation
   async function getFriendsList() {
     try {

@@ -48,15 +48,6 @@ const Chat = ({ setIsLoggedIn }) => {
   const [showReferenceMessagePop, setShowReferenceMessagePop] = useState(false);
   const [refrenceMessageId, setRefrenceMessageId] = useState(null);
 
-  // Authentication check
-  useEffect(() => {
-    if (!token) {
-      setIsLoggedIn(false);
-    } else {
-      setIsLoggedIn(true);
-    }
-  }, [setIsLoggedIn]);
-
   // Fetch Friends List
   const getFriendsList = useCallback(async () => {
     try {
@@ -750,9 +741,6 @@ const Chat = ({ setIsLoggedIn }) => {
                           <h3 className="font-medium text-gray-800">
                             {friend.name}
                           </h3>
-                          <span className="text-xs text-gray-400">
-                            12:30 PM
-                          </span>
                         </div>
                         <div className="flex justify-between items-end">
                           <p className="text-sm text-gray-500 truncate w-48">
