@@ -6,10 +6,8 @@ import {
   MessageCircle,
   User,
   Search,
-  Bell,
   Heart,
   Users,
-  Settings,
   LogOut,
   Home,
   MessageSquare,
@@ -550,17 +548,6 @@ const NavbarUser = ({ setIsLoggedIn }) => {
                         </div>
 
                         <div className="py-1">
-                          <ProfileMenuItem
-                            to="/chat"
-                            icon={<User size={16} />}
-                            text="chat"
-                          />
-                          <ProfileMenuItem
-                            to="/news"
-                            icon={<Settings size={16} />}
-                            text="news"
-                          />
-
                           <div className="border-t border-gray-200 my-1"></div>
 
                           <div
